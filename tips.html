@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mindly – Tips</title>
+
+  <style>
+    /* ==== GLOBAL RESET & BASE STYLES ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #6e9277;    /* Page background color */
+      color: white;
+      min-height: 100vh;
+      line-height: 1.5;
+      text-align: center;             /* Center all text by default */
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ==== NAVIGATION BAR ==== */
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      background-color: #506b57;   
+      height: 72px;
+      position: relative;           /* For centering nav-items */
+    }
+
+    /* Placeholder “Logo” box (flush left) */
+    .nav-logo {
+      position: absolute;
+      left: 32px;                 /* same as the white underline’s 32px margin */
+      top: 50%;
+      transform: translateY(-50%);
+      width: 80px;                /* adjust to your logo’s desired width */
+      height: auto; 
+      object-fit: contain;
+    }
+
+    /* Centered menu items */
+    .nav-items {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      list-style: none;
+      display: flex;
+      z-index: 10;                    /* Ensure links appear above logo/underline */
+    }
+
+    .nav-items li {
+      margin-left: 28px;
+    }
+
+    .nav-items li:first-child {
+      margin-left: 0;
+    }
+
+    .nav-items li a {
+      font-size: 16px;
+      letter-spacing: 0.8px;
+      padding: 8px 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-items li a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-items li a.active {
+      font-weight: bold;
+    }
+
+    /* Thin white underline below nav */
+    .nav-underline {
+      border: none;
+      height: 2px;
+      background-color: white;
+      margin: 0;
+    }
+
+    /* ==== MAIN CONTAINER ==== */
+    .container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    /* ---- Page Title (“Tips”) ---- */
+    .page-title {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      margin-bottom: 32px;
+      opacity: 0.9;
+    }
+
+    /* ==== TIPS GRID ==== */
+    .tips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .tip-card {
+      background-color: #506b57;     /* Darker-green for each card */
+      border-radius: 24px;
+      padding: 24px;
+      flex: 0 0 calc(33.333% - 16px); /* Three columns, gap handled by flex gap */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.7), 0 10px 20px rgba(0, 0, 0, 0.25)
+    }
+
+    .tip-card h2 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .tip-card p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: white;
+    }
+
+     /* ========================================
+   SITE FOOTER
+   ======================================== */
+.site-footer {
+  width: 100%;
+  background-color: #f2f2f2; /* Light gray background */
+  color: #333;               /* Dark text for readability */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 64px;          /* Space above footer */
+}
+
+/* ------------------------------
+   1) Emergency Row
+   ------------------------------ */
+.footer-emergency {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  background-color: #ffffff;
+  padding: 24px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.footer-emergency .emergency-item {
+  flex: 1 1 200px; /* allow wrapping */
+  text-align: center;
+  margin: 8px;
+}
+
+.footer-emergency h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.footer-emergency p {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ------------------------------
+   2) Main “Why Choose” + Columns
+   ------------------------------ */
+.footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 32px 16px;
+  gap: 32px;
+}
+
+/* Left: “Why Choose Mindly?” */
+.footer-about {
+  flex: 1 1 300px;
+}
+
+.footer-about h4 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.footer-about p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.footer-about .made-with {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Right: Link columns */
+.footer-columns {
+  display: flex;
+  flex: 2 1 500px;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1 1 140px;
+}
+
+.footer-column h5 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 6px;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.footer-column ul li a:hover {
+  color: #506b57; /* Mindly green on hover */
+}
+
+/* ------------------------------
+   3) Bottom Social + Copyright
+   ------------------------------ */
+.footer-bottom {
+  background-color: #eaeaea;
+  padding: 16px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ddd;
+}
+
+.social-icons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px; /* for stacking on small screens */
+}
+
+.social-link {
+  font-size: 24px;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.social-link:hover {
+  color: #506b57;        /* Mindly green on hover */
+  transform: translateY(-2px);
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: #333;
+  margin: 0;
+}
+
+/* On very narrow screens, stack columns vertically */
+@media (max-width: 800px) {
+  .footer-emergency {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-main {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .footer-columns {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+}
+
+    /* ==== RESPONSIVE BEHAVIOR ==== */
+    @media (max-width: 800px) {
+      .tip-card {
+        flex: 0 0 calc(50% - 12px);   /* Two columns on medium screens */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 36px;
+      }
+      .subtitle {
+        font-size: 18px;
+        margin-bottom: 24px;
+      }
+      .tip-card {
+        flex: 0 0 100%;               /* One column on small screens */
+        padding: 16px;
+      }
+      .tip-card h2 {
+        font-size: 20px;
+      }
+      .tip-card p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ========================
+       NAVIGATION BAR
+       ======================== -->
+  <nav class="navbar">
+    <!-- Placeholder “LOGO” box on the left -->
+    <img src="Mindly-2-removebg-preview.png" alt="Mindly Logo" class="nav-logo" />
+
+    <!-- Centered menu items -->
+    <ul class="nav-items">
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/home_index.html">HOME</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/journal_index.html">JOURNAL</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/check-in_index.html">CHECK-IN</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/stories_index.html">STORIES</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/tips_index.html" class="active">TIPS</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/gratitude_index.html">GRATITUDE</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/letter_index.html">LETTER</a></li>
+    </ul>
+  </nav>
+
+  <hr class="nav-underline" />
+
+  <!-- ========================
+       MAIN CONTENT
+       ======================== -->
+  <div class="container">
+    <!-- Page Title -->
+    <h1 class="page-title">Tips</h1>
+    <p class="subtitle">Here Is Some Tips To Take Care Of Your Mental Health</p>
+
+    <!-- Grid of six tip cards -->
+    <div class="tips-grid">
+      <!-- Tip Card #1 -->
+      <div class="tip-card">
+        <h2>Get enough sleep 🛏️</h2>
+        <p>
+          Sleep is essential for mental and emotional balance. Try to get 7-9 hours of sleep each night to help your brain rest, reset, and process emotions. 
+          Lack of sleep can lead to irritability, low energy, and difficulty concentrating, which can all affect your mood and mental health.
+        </p>
+      </div>
+
+      <!-- Tip Card #2 -->
+      <div class="tip-card">
+        <h2>Talk to someone you trust 🗣️</h2>
+        <p>
+          Sharing your thoughts and feelings with someone you trust, like a friend, family member, or counselor, can make a big difference. 
+          Talking things out helps release emotional pressure, gives you a new perspective, and reminds you that you're not alone.
+        </p>
+      </div>
+
+      <!-- Tip Card #3 -->
+      <div class="tip-card">
+        <h2>Stay active 🏃🏻‍♀️‍➡️</h2>
+        <p>
+          Regular physical activity, such as walking, dancing, stretching, or playing a sport, can improve your mood by releasing feel-good chemicals called endorphins. 
+          It also helps reduce stress and anxiety, improves sleep, and boosts confidence.
+        </p>
+      </div>
+
+      <!-- Tip Card #4 -->
+      <div class="tip-card">
+        <h2>Take breaks ⏱️</h2>
+        <p>
+          It's important to give yourself time to rest, especially when you're feeling overwhelmed. 
+          Taking short breaks during schoolwork or chores helps prevent burnout and keeps your mind fresh. 
+          Use your break to do something calming, like deep breathing, listening to music, or stepping outside.
+        </p>
+      </div>
+
+      <!-- Tip Card #5 -->
+      <div class="tip-card">
+        <h2>Practice gratitude✨</h2>
+        <p>
+          Focusing on what you're thankful for can help shift your mindset from negative to positive. 
+          Try writing down one or two good things each day, no matter how small. It helps you notice the positives in life and can boost your emotional resilience over time.
+        </p>
+      </div>
+
+      <!-- Tip Card #6 -->
+      <div class="tip-card">
+        <h2>Limit screen time 📱</h2>
+        <p>
+          Spending too much time on screens, especially on social media, can affect your mood, sleep, and self-esteem. 
+          Try to set healthy limits by taking breaks, especially before bedtime, and spend more time doing offline activities that bring you joy or relaxation.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+<!-- ===========================
+     BEGIN MINDLY FOOTER
+     =========================== -->
+     <footer class="site-footer">
+      <!-- ==== Top “Emergency” Row ==== -->
+      <div class="footer-emergency">
+        <div class="emergency-item">
+          <h3>Call 911</h3>
+          <p>If there is an emergency and you need immediate assistance</p>
+        </div>
+        <div class="emergency-item">
+          <h3>Text HOME to 741-741</h3>
+          <p>If you are in distress and need mental health support</p>
+        </div>
+        <div class="emergency-item">
+          <h3>Call 988</h3>
+          <p>To get support from the Suicide and Crisis Lifeline</p>
+        </div>
+      </div>
+    
+      <!-- ==== Middle “Why Choose Us?” + Column Links ==== -->
+      <div class="footer-main">
+        <!-- Left: Why Choose Us? -->
+        <div class="footer-about">
+          <h4>Why Choose Mindly?</h4>
+          <p>
+            Our approach centers on treating people with the same kindness and respect we value for ourselves. We understand mental health challenges firsthand and support your pursuit of well-being with compassion. Whether it’s connecting you with the right tools or providing a safe space for self-reflection, Mindly is here for you.
+          </p>
+          <p class="made-with">
+            Made with ❤️ by Mindly.com
+          </p>
+        </div>
+    
+        <!-- Right: Columned Links -->
+        <div class="footer-columns">
+          <!-- Column 1 -->
+          <div class="footer-column">
+            <h5>Company</h5>
+            <ul>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="vision.html">Our Vision</a></li>
+              <li><a href="team.html">Team</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <!-- Column 2 -->
+          <div class="footer-column">
+            <h5>Resources</h5>
+            <ul>
+              <li><a href="library.html">Library</a></li>
+              <li><a href="answers.html">Answers</a></li>
+              <li><a href="reviews.html">Reviews</a></li>
+              <li><a href="journal.html">Journal</a></li>
+              <li><a href="tools.html">Tools</a></li>
+              <li><a href="news.html">News</a></li>
+            </ul>
+          </div>
+          <!-- Column 3 -->
+          <div class="footer-column">
+            <h5>Community</h5>
+            <ul>
+              <li><a href="network.html">Network</a></li>
+              <li><a href="portal.html">Portal</a></li>
+              <li><a href="local.html">Local</a></li>
+              <li><a href="social.html">Social</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <!-- ==== Bottom Social + Copyright ==== -->
+      <div class="footer-bottom">
+        <!-- Social Icons (replace “#” with actual URLs) -->
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram" class="social-link">📸</a>
+          <a href="#" aria-label="Facebook" class="social-link">👍</a>
+          <a href="#" aria-label="YouTube" class="social-link">▶️</a>
+          <a href="#" aria-label="LinkedIn" class="social-link">💼</a>
+          <a href="#" aria-label="TikTok" class="social-link">🎵</a>
+          <a href="#" aria-label="Pinterest" class="social-link">📌</a>
+          <a href="#" aria-label="Snapchat" class="social-link">👻</a>
+        </div>
+        <p class="footer-copy">
+          © 2025 Mindly.com. All Rights Reserved.  |  <a href="terms.html">Terms of Use</a>  |  <a href="privacy.html">Privacy Policy</a>
+        </p>
+      </div>
+    </footer>    
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mindly – Letter</title>
+
+  <style>
+    /* ==== GLOBAL RESET & BASE STYLES ==== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #6e9277;    /* Page background color */
+      color: white;
+      min-height: 100vh;
+      line-height: 1.5;
+      text-align: center;            /* Center all text by default */
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    textarea {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 16px;
+      color: white;
+      background-color: #506b57;     /* Darker-green textarea */
+      border: none;
+      border-radius: 24px;
+      padding: 16px;
+      resize: none;
+      outline: none;
+      width: 100%;
+      height: 400px;                 /* Adjust height as needed */
+      box-sizing: border-box;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    /* ==== NAVIGATION BAR ==== */
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      background-color: #506b57;   
+      height: 72px;
+      position: relative;           /* For centering nav-items */
+    }
+
+    /* Placeholder “LOGO” box (flush left) */
+    .nav-logo {
+      position: absolute;
+      left: 32px;                 /* same as the white underline’s 32px margin */
+      top: 50%;
+      transform: translateY(-50%);
+      width: 80px;                /* adjust to your logo’s desired width */
+      height: auto; 
+      object-fit: contain;
+    }
+
+    /* Centered menu items */
+    .nav-items {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      list-style: none;
+      display: flex;
+      z-index: 10;                   /* Ensure links appear above logo/underline */
+    }
+
+    .nav-items li {
+      margin-left: 28px;
+    }
+
+    .nav-items li:first-child {
+      margin-left: 0;
+    }
+
+    .nav-items li a {
+      font-size: 16px;
+      letter-spacing: 0.8px;
+      padding: 8px 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-items li a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-items li a.active {
+      font-weight: bold;
+    }
+
+    /* Thin white underline below nav */
+    .nav-underline {
+      border: none;
+      height: 2px;
+      background-color: white;
+      margin: 0;
+    }
+
+    /* ==== MAIN CONTAINER ==== */
+    .container {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 16px;
+    }
+
+    /* ---- Page Title (“Write A Letter To Yourself”) ---- */
+    .page-title {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      margin-bottom: 32px;
+      opacity: 0.9;
+    }
+
+    /* ==== BUTTONS AT BOTTOM ==== */
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background-color: #506b57;       /* Darker-green button background */
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 12px 32px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      min-width: 140px;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+
+    /* ===== Delete‐button styling inside each entry card ===== */
+    .delete-btn {
+      background-color: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 8px;         /* space above the button */
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .delete-btn:hover {
+      background-color: #fff;
+      color: #506b57;
+    }
+
+    /* =============================
+   SAVED ENTRY CARD STYLING
+   ============================= */
+    .entries-container {
+    margin-top: 48px;       /* space above the saved-entries section */
+    text-align: left;       /* left-align card contents */
+    }
+
+    /* Each individual saved entry */
+    .entry-card {
+        background-color: #506b57;   /* same darker-green as your textarea */
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 16px;         /* space between cards */
+    /* White glow + drop‐shadow for 3D effect */
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .entry-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 6px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Timestamp (date/time) for each entry, displayed above the text */
+    .entry-timestamp {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-bottom: 8px;
+    }
+
+    /* The actual journal text for that entry */
+    .entry-text {
+        font-size: 16px;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+      /* ========================================
+   SITE FOOTER
+   ======================================== */
+.site-footer {
+  width: 100%;
+  background-color: #f2f2f2; /* Light gray background */
+  color: #333;               /* Dark text for readability */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 64px;          /* Space above footer */
+}
+
+/* ------------------------------
+   1) Emergency Row
+   ------------------------------ */
+.footer-emergency {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  background-color: #ffffff;
+  padding: 24px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.footer-emergency .emergency-item {
+  flex: 1 1 200px; /* allow wrapping */
+  text-align: center;
+  margin: 8px;
+}
+
+.footer-emergency h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.footer-emergency p {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ------------------------------
+   2) Main “Why Choose” + Columns
+   ------------------------------ */
+.footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 32px 16px;
+  gap: 32px;
+}
+
+/* Left: “Why Choose Mindly?” */
+.footer-about {
+  flex: 1 1 300px;
+}
+
+.footer-about h4 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.footer-about p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.footer-about .made-with {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Right: Link columns */
+.footer-columns {
+  display: flex;
+  flex: 2 1 500px;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1 1 140px;
+}
+
+.footer-column h5 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 6px;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.footer-column ul li a:hover {
+  color: #506b57; /* Mindly green on hover */
+}
+
+/* ------------------------------
+   3) Bottom Social + Copyright
+   ------------------------------ */
+.footer-bottom {
+  background-color: #eaeaea;
+  padding: 16px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #ddd;
+}
+
+.social-icons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px; /* for stacking on small screens */
+}
+
+.social-link {
+  font-size: 24px;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.social-link:hover {
+  color: #506b57;        /* Mindly green on hover */
+  transform: translateY(-2px);
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: #333;
+  margin: 0;
+}
+
+/* On very narrow screens, stack columns vertically */
+@media (max-width: 800px) {
+  .footer-emergency {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-main {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .footer-columns {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+}
+
+    /* ==== RESPONSIVE BEHAVIOR ==== */
+    @media (max-width: 640px) {
+      .page-title {
+        font-size: 36px;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        font-size: 18px;
+        margin-bottom: 24px;
+      }
+      textarea {
+        height: 300px;
+        padding: 12px;
+      }
+      .btn {
+        padding: 10px 24px;
+        font-size: 14px;
+        min-width: 120px;
+      }
+      .button-row {
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ========================
+       NAVIGATION BAR
+       ======================== -->
+  <nav class="navbar">
+    <!-- Placeholder “LOGO” box on the left -->
+    <img src="Mindly-2-removebg-preview.png" alt="Mindly Logo" class="nav-logo" />
+
+    <!-- Centered menu items -->
+    <ul class="nav-items">
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/home_index.html">HOME</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/journal_index.html">JOURNAL</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/check-in_index.html">CHECK-IN</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/stories_index.html">STORIES</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/tips_index.html">TIPS</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/gratitude_index.html">GRATITUDE</a></li>
+      <li><a href="file:///Users/deenha/Downloads/Mindly%20Code/letter_index.html" class="active">LETTER</a></li>
+    </ul>
+  </nav>
+
+  <hr class="nav-underline" />
+
+  <!-- ========================
+       MAIN CONTENT
+       ======================== -->
+  <div class="container">
+    <!-- Page Title -->
+    <h1 class="page-title">Write A Letter To Yourself</h1>
+    <p class="subtitle">Write A Kind Message, A Reminder, Or Anything On Your Heart.</p>
+
+    <!-- Large textarea for writing -->
+    <textarea id="letterText" placeholder="Write Here..."></textarea>
+
+    <!-- Buttons below: Save Entry and Clear -->
+    <div class="button-row">
+      <button id="saveBtn" class="btn">Save Entry</button>
+      <button id="clearBtn" class="btn">Clear</button>
+    </div>
+    <!-- ======================
+     SAVED JOURNAL ENTRIES
+     ====================== -->
+     <div class="entries-container" id="entriesContainer">
+        <!-- JavaScript will inject individual entry cards here -->
+      </div>
+    </div>
+<!-- ===========================
+     BEGIN MINDLY FOOTER
+     =========================== -->
+     <footer class="site-footer">
+        <!-- ==== Top “Emergency” Row ==== -->
+        <div class="footer-emergency">
+          <div class="emergency-item">
+            <h3>Call 911</h3>
+            <p>If there is an emergency and you need immediate assistance</p>
+          </div>
+          <div class="emergency-item">
+            <h3>Text HOME to 741-741</h3>
+            <p>If you are in distress and need mental health support</p>
+          </div>
+          <div class="emergency-item">
+            <h3>Call 988</h3>
+            <p>To get support from the Suicide and Crisis Lifeline</p>
+          </div>
+        </div>
+      
+        <!-- ==== Middle “Why Choose Us?” + Column Links ==== -->
+        <div class="footer-main">
+          <!-- Left: Why Choose Us? -->
+          <div class="footer-about">
+            <h4>Why Choose Mindly?</h4>
+            <p>
+              Our approach centers on treating people with the same kindness and respect we value for ourselves. We understand mental health challenges firsthand and support your pursuit of well-being with compassion. Whether it’s connecting you with the right tools or providing a safe space for self-reflection, Mindly is here for you.
+            </p>
+            <p class="made-with">
+              Made with ❤️ by Mindly.com
+            </p>
+          </div>
+      
+          <!-- Right: Columned Links -->
+          <div class="footer-columns">
+            <!-- Column 1 -->
+            <div class="footer-column">
+              <h5>Company</h5>
+              <ul>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="vision.html">Our Vision</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+            </div>
+            <!-- Column 2 -->
+            <div class="footer-column">
+              <h5>Resources</h5>
+              <ul>
+                <li><a href="library.html">Library</a></li>
+                <li><a href="answers.html">Answers</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="journal.html">Journal</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="news.html">News</a></li>
+              </ul>
+            </div>
+            <!-- Column 3 -->
+            <div class="footer-column">
+              <h5>Community</h5>
+              <ul>
+                <li><a href="network.html">Network</a></li>
+                <li><a href="portal.html">Portal</a></li>
+                <li><a href="local.html">Local</a></li>
+                <li><a href="social.html">Social</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      
+        <!-- ==== Bottom Social + Copyright ==== -->
+        <div class="footer-bottom">
+          <!-- Social Icons (replace “#” with actual URLs) -->
+          <div class="social-icons">
+            <a href="#" aria-label="Instagram" class="social-link">📸</a>
+            <a href="#" aria-label="Facebook" class="social-link">👍</a>
+            <a href="#" aria-label="YouTube" class="social-link">▶️</a>
+            <a href="#" aria-label="LinkedIn" class="social-link">💼</a>
+            <a href="#" aria-label="TikTok" class="social-link">🎵</a>
+            <a href="#" aria-label="Pinterest" class="social-link">📌</a>
+            <a href="#" aria-label="Snapchat" class="social-link">👻</a>
+          </div>
+          <p class="footer-copy">
+            © 2025 Mindly.com. All Rights Reserved.  |  <a href="terms.html">Terms of Use</a>  |  <a href="privacy.html">Privacy Policy</a>
+          </p>
+        </div>
+      </footer>    
+
+    <!-- ========================
+    EMBEDDED JAVASCRIPT
+    ======================== -->
+    <script>
+            /***** 1) loadEntries() – display all saved letter entries with a Delete button *****/
+            function loadEntries() {
+              const entriesContainer = document.getElementById('entriesContainer');
+              const keys = [];
+              for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('letter-')) {
+                  keys.push(key);
+                }
+              }
+              // Sort by timestamp so oldest entries appear first
+              keys.sort((a, b) => {
+                const tA = a.substring('letter-'.length);
+                const tB = b.substring('letter-'.length);
+                return tA.localeCompare(tB);
+              });
+          
+              // Clear existing cards
+              entriesContainer.innerHTML = '';
+          
+              // If no entries, show a placeholder
+              if (keys.length === 0) {
+                entriesContainer.innerHTML = '<p>No saved letter entries yet.</p>';
+                return;
+              }
+          
+              // Build and append each entry card
+              keys.forEach(key => {
+                const content = localStorage.getItem(key);
+                const timestamp = key.substring('letter-'.length);
+          
+                // Create card wrapper
+                const entryCard = document.createElement('div');
+                entryCard.className = 'entry-card';
+          
+                // Timestamp paragraph
+                const tsPara = document.createElement('p');
+                tsPara.className = 'entry-timestamp';
+                tsPara.textContent = new Date(timestamp).toLocaleString();
+                entryCard.appendChild(tsPara);
+          
+                // Text paragraph
+                const textPara = document.createElement('p');
+                textPara.className = 'entry-text';
+                textPara.textContent = content;
+                entryCard.appendChild(textPara);
+          
+                // ===== Delete button =====
+                const delBtn = document.createElement('button');
+                delBtn.textContent = 'Delete';
+                delBtn.className = 'delete-btn';
+                delBtn.addEventListener('click', () => {
+                  if (confirm('Delete this letter entry?')) {
+                    localStorage.removeItem(key);
+                    loadEntries();
+                  }
+                });
+                entryCard.appendChild(delBtn);
+          
+                // Append card to container
+                entriesContainer.appendChild(entryCard);
+              });
+            }
+          
+            /***** 2) On page load, display any existing letter entries *****/
+            document.addEventListener('DOMContentLoaded', () => {
+              loadEntries();
+            });
+          
+            /***** 3) Save / Clear logic for the letter textarea *****/
+            const letterText = document.getElementById('letterText');
+            const saveBtn    = document.getElementById('saveBtn');
+            const clearBtn   = document.getElementById('clearBtn');
+          
+            saveBtn.addEventListener('click', () => {
+              const content = letterText.value.trim();
+              if (!content) {
+                alert('Cannot save an empty letter entry.');
+                return;
+              }
+              // Store under "letter-<ISO timestamp>"
+              const timestamp = new Date().toISOString();
+              localStorage.setItem('letter-' + timestamp, content);
+          
+              // Refresh the saved-entries list immediately
+              loadEntries();
+          
+              alert('Your letter entry has been saved.');
+              // Optionally clear the textarea after saving:
+              // letterText.value = '';
+            });
+          
+            clearBtn.addEventListener('click', () => {
+              if (letterText.value.trim()) {
+                if (confirm('Are you sure you want to clear your current entry?')) {
+                  letterText.value = '';
+                }
+              }
+            });
+    </script>          
+</body>
+</html>
